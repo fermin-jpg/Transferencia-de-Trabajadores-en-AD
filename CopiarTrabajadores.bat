@@ -3,14 +3,14 @@ setlocal
 
 net session >nul 2>&1
 if %errorLevel% neq 0 (
-    powershell -Command "Start-Process -FilePath '%~f0' -Verb RunAs"
+    powershell -Command "Start-Process -FilePath '%~f0' -Verb RunAs -WindowStyle Hidden"
     exit /b
 )
 
 set "BATPATH=%~f0"
 set "PS1=%TEMP%\ADTransfer_%RANDOM%.ps1"
 powershell -Command "$f=Get-Content $env:BATPATH -Encoding Default; $n=($f | Select-String '^:PS1START').LineNumber; $f | Select-Object -Skip $n | Set-Content $env:PS1 -Encoding UTF8"
-powershell -NoProfile -ExecutionPolicy Bypass -File "%PS1%"
+powershell -NoProfile -WindowStyle Hidden -ExecutionPolicy Bypass -File "%PS1%"
 if exist "%PS1%" del /f /q "%PS1%"
 exit /b
 
